@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import AllPokemon from './pages/AllPokemon'
 import PokemonDetail from './pages/PokemonDetail'
+import Register from './pages/Register'
+import Login from './pages/Login'
 import './App.css'
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/pokemon" element={<AllPokemon />} />
             <Route path="/pokemon/:id" element={<PokemonDetail />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
       </div>

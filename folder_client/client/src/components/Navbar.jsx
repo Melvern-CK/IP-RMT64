@@ -16,6 +16,14 @@ const Navbar = () => {
           <Link to="/pokemon" className="nav-link">
             Pokémon
           </Link>
+          <div className="nav-auth">
+            <Link to="/login" className="nav-link nav-login">
+              Sign In
+            </Link>
+            <Link to="/register" className="nav-link nav-register">
+              Register
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

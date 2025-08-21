@@ -15,6 +15,7 @@ const PokemonDetail = () => {
   const [movesData, setMovesData] = useState({
     levelUp: [],
     tm: [],
+    eggTutor: [],
     loading: false
   });
   const [selectedVersion, setSelectedVersion] = useState('sword-shield');
@@ -26,6 +27,7 @@ const PokemonDetail = () => {
       setMovesData({
         levelUp: [],
         tm: [],
+        eggTutor: [],
         loading: false
       });
     }
@@ -103,13 +105,29 @@ const PokemonDetail = () => {
   const getCategoryIcon = (damageClass) => {
     switch (damageClass) {
       case 'physical':
-        return '★';
+        return '💥';
       case 'special':
-        return '●';
+        return '🌀';
       case 'status':
-        return '—';
+        return '💬';
       default:
         return '●';
+    }
+  };
+
+  // Function to fetch move details from your database API
+  const fetchMoveDetails = async (moveName) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/moves/${moveName}`);
+      if (!response.ok) {
+        console.log(`Move ${moveName} not found in database`);
+        return null;
+      }
+      const moveData = await response.json();
+      return moveData;
+    } catch (error) {
+      console.error(`Error fetching move ${moveName}:`, error);
+      return null;
     }
   };
 
@@ -127,60 +145,84 @@ const PokemonDetail = () => {
     const movesData = pokemon.moves_detail || pokemon.moves || [];
     console.log('Using moves data:', movesData);
     
-    // Don't set loading state, process immediately
-    const levelUpMoves = [];
-    const tmMoves = [];
+    // Set loading state while fetching move details
+    setMovesData(prev => ({ ...prev, loading: true }));
     
     try {
-      // Process moves with the flattened structure
+      const levelUpMoves = [];
+      const tmMoves = [];
+      const eggTutorMoves = [];
+      
+      // Collect moves for the selected version
+      const validMoves = [];
       for (const moveEntry of movesData) {
         try {
-          console.log('Processing move entry:', moveEntry);
-          
-          // Extract data from the flattened structure
           const moveName = moveEntry.move || moveEntry.name;
           const method = moveEntry.method;
           const level = moveEntry.level;
           const versionGroup = moveEntry.version_group;
           
-          console.log(`Move: ${moveName}, Method: ${method}, Level: ${level}, Version: ${versionGroup}`);
-          
           // Check if this move is for the selected version
-          if (versionGroup !== versionFilter) {
-            console.log(`Skipping move ${moveName} - wrong version (${versionGroup} != ${versionFilter})`);
-            continue;
+          if (versionGroup === versionFilter) {
+            validMoves.push({ moveName, method, level, versionGroup });
           }
-          
-          // Add to appropriate category based on method
-          if (method === 'level-up') {
-            levelUpMoves.push({
-              name: moveName,
-              type: 'normal',
-              damageClass: 'physical',
-              power: '—',
-              accuracy: '—',
-              level: level || 1,
-              version: versionGroup
-            });
-            console.log(`Added level-up move: ${moveName} at level ${level}`);
-          } else if (method === 'machine') {
-            tmMoves.push({
-              name: moveName,
-              type: 'normal',
-              damageClass: 'status',
-              power: '—',
-              accuracy: '—',
-              tm: `TM${String(tmMoves.length + 1).padStart(2, '0')}`,
-              version: versionGroup
-            });
-            console.log(`Added TM move: ${moveName}`);
-          }
-          
         } catch (moveError) {
-          console.error('Error processing move:', moveError);
+          console.error('Error processing move entry:', moveError);
           continue;
         }
       }
+      
+      // Batch fetch move details for all valid moves
+      const moveDetailsPromises = validMoves.map(({ moveName }) => 
+        fetchMoveDetails(moveName).catch(error => {
+          console.error(`Error fetching ${moveName}:`, error);
+          return null;
+        })
+      );
+      
+      const allMoveDetails = await Promise.all(moveDetailsPromises);
+      
+      // Process moves with fetched details
+      validMoves.forEach((move, index) => {
+        const { moveName, method, level, versionGroup } = move;
+        const moveDetails = allMoveDetails[index];
+        
+        // Add to appropriate category based on method
+        if (method === 'level-up') {
+          levelUpMoves.push({
+            name: moveName,
+            type: moveDetails?.type || 'normal',           // elemental type from API (fire, water, etc.)
+            damageClass: moveDetails?.category || 'physical', // category from API (physical, special, status)
+            power: moveDetails?.power || '—',
+            accuracy: moveDetails?.accuracy || '—',
+            level: level || 1,
+            version: versionGroup
+          });
+          console.log(`Added level-up move: ${moveName} at level ${level}`);
+        } else if (method === 'machine') {
+          tmMoves.push({
+            name: moveName,
+            type: moveDetails?.type || 'normal',           // elemental type from API (fire, water, etc.)
+            damageClass: moveDetails?.category || 'status',   // category from API (physical, special, status)
+            power: moveDetails?.power || '—',
+            accuracy: moveDetails?.accuracy || '—',
+            tm: `TM${String(tmMoves.length + 1).padStart(2, '0')}`,
+            version: versionGroup
+          });
+          console.log(`Added TM move: ${moveName}`);
+        } else if (method === 'egg' || method === 'tutor') {
+          eggTutorMoves.push({
+            name: moveName,
+            type: moveDetails?.type || 'normal',           // elemental type from API (fire, water, etc.)
+            damageClass: moveDetails?.category || 'status',   // category from API (physical, special, status)
+            power: moveDetails?.power || '—',
+            accuracy: moveDetails?.accuracy || '—',
+            method: method === 'egg' ? 'Egg' : 'Tutor',
+            version: versionGroup
+          });
+          console.log(`Added ${method} move: ${moveName}`);
+        }
+      });
       
       // Sort level-up moves by level, then by name
       levelUpMoves.sort((a, b) => {
@@ -191,14 +233,28 @@ const PokemonDetail = () => {
       // Sort TM moves by name
       tmMoves.sort((a, b) => a.name.localeCompare(b.name));
       
-      console.log(`Final moves for ${versionFilter}:`, { levelUp: levelUpMoves.length, tm: tmMoves.length });
+      // Sort egg/tutor moves by method (Egg first, then Tutor), then by name
+      eggTutorMoves.sort((a, b) => {
+        if (a.method !== b.method) {
+          return a.method === 'Egg' ? -1 : 1; // Egg moves first
+        }
+        return a.name.localeCompare(b.name);
+      });
+      
+      console.log(`Final moves for ${versionFilter}:`, { 
+        levelUp: levelUpMoves.length, 
+        tm: tmMoves.length, 
+        eggTutor: eggTutorMoves.length 
+      });
       console.log('Level-up moves:', levelUpMoves);
       console.log('TM moves:', tmMoves);
+      console.log('Egg/Tutor moves:', eggTutorMoves);
       
       // Set moves data immediately without loading state
       setMovesData({
         levelUp: levelUpMoves,
         tm: tmMoves,
+        eggTutor: eggTutorMoves,
         loading: false
       });
       
@@ -207,6 +263,7 @@ const PokemonDetail = () => {
       setMovesData({
         levelUp: [],
         tm: [],
+        eggTutor: [],
         loading: false
       });
     }
@@ -1381,6 +1438,45 @@ const PokemonDetail = () => {
                         <span className="move-accuracy">{move.accuracy}</span>
                       </div>
                     ))
+                  )}
+                </div>
+              </div>
+
+              <div className="moves-section">
+                <h3>Moves learnt by Egg/Tutor</h3>
+                <div className="moves-table">
+                  <div className="moves-header">
+                    <span>Method</span>
+                    <span>Move</span>
+                    <span>Type</span>
+                    <span>Cat.</span>
+                    <span>Power</span>
+                    <span>Acc.</span>
+                  </div>
+                  {(movesData.eggTutor?.length === 0 || !movesData.eggTutor) && !movesData.loading ? (
+                    <div className="no-moves">No egg/tutor moves found for this version</div>
+                  ) : (
+                    movesData.eggTutor?.map((move, index) => (
+                      <div key={index} className="move-row">
+                        <span className="move-level">{move.method}</span>
+                        <span className="move-name">{move.name.replace(/-/g, ' ')}</span>
+                        <span className="move-type" style={{ 
+                          backgroundColor: getTypeColor(move.type), 
+                          color: 'white',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          textTransform: 'uppercase'
+                        }}>
+                          {move.type}
+                        </span>
+                        <span className="move-category" title={move.damageClass}>
+                          {getCategoryIcon(move.damageClass)}
+                        </span>
+                        <span className="move-power">{move.power}</span>
+                        <span className="move-accuracy">{move.accuracy}</span>
+                      </div>
+                    )) || []
                   )}
                 </div>
               </div>
