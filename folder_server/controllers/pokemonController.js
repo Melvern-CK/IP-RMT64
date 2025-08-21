@@ -21,7 +21,10 @@ class PokemonController {
             }
         }
 
-      const pokemons = await Pokemon.findAll({ where });
+      const pokemons = await Pokemon.findAll({
+        where,
+        order: [['pokeApiId', 'ASC']]
+      });
       res.json(pokemons);
     } catch (err) {
         console.log(err);
