@@ -22,7 +22,14 @@ class AuthController {
         throw { name: "Unauthorized", message: "Invalid credentials" }
       }
       const token = signToken({ id: user.id, role: user.role });
-      res.json({ token });
+      res.json({ 
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email
+        }
+      });
     } catch (err) {
       next(err);
     }

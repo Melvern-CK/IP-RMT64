@@ -125,14 +125,15 @@ class TeamController {
       // Get all TeamPokemon for this team, including Pokémon name
       const teamPokemons = await TeamPokemon.findAll({
         where: { teamId: team.id },
-        include: [{ model: Pokemon, attributes: ['name'] }],
+        include: [{ model: Pokemon }],
         order: [['slot', 'ASC']]
       });
       const formattedTeam = {
         id: team.id,
         name: team.name,
         Pokemons: teamPokemons.map(tp => ({
-          name: tp.Pokemon.name,
+          id: tp.id, // TeamPokemon ID for deletion
+          Pokemon: tp.Pokemon,
           moves: tp.moves,
           ability: tp.ability,
           nature: tp.nature,
