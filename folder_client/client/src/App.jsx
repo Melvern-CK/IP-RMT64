@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import AllPokemon from './pages/AllPokemon'
+import PokemonDetail from './pages/PokemonDetail'
 import './App.css'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/pokemon" element={<AllPokemon />} />
+            <Route path="/pokemon/:id" element={<PokemonDetail />} />
           </Routes>
         </main>
       </div>

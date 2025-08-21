@@ -1,5 +1,15 @@
 /* PokemonCard.css */
 
+.pokemon-card-link {
+  text-decoration: none;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.pokemon-card-link:hover {
+  transform: translateY(-4px);
+}
+
 .pokemon-card {
   position: relative;
   width: 200px;

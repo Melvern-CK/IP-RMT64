@@ -13,6 +13,18 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    moveType: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    power: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    accuracy: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     sequelize,
