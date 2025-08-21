@@ -3,12 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import Swal from 'sweetalert2'
 import http from '../libs/http';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
 
   return (
@@ -29,7 +31,9 @@ const Login = () => {
                     password: password
                 })
                 
-                localStorage.setItem("access_token", response.data.token)
+                // Use the AuthContext login function
+                login(response.data.token, response.data.user);
+                
                 setLoading(false);
                 navigate("/pokemon")                         
             } catch (error) {

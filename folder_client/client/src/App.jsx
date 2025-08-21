@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
 import Navbar from './components/Navbar'
 import AllPokemon from './pages/AllPokemon'
 import PokemonDetail from './pages/PokemonDetail'
@@ -9,21 +10,23 @@ import './App.css'
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/pokemon" element={<AllPokemon />} />
-            <Route path="/pokemon/:id" element={<PokemonDetail />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Navbar />
+          
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/pokemon" element={<AllPokemon />} />
+              <Route path="/pokemon/:id" element={<PokemonDetail />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+            </Routes>
+          </main>
+        </div>
+      </Router>
+    </AuthProvider>
   )
 }
 
