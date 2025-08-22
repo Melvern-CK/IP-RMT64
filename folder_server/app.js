@@ -9,6 +9,7 @@ const pokemonRoute = require('./routes/pokemonRoute');
 const moveRoute = require('./routes/moveRoute');
 const auth = require('./middlewares/auth');
 const teamRoute = require('./routes/teamRoute');
+const geminiRoute = require('./routes/geminiRoute');
 
 
 app.use(express.urlencoded({ extended: false }));
@@ -22,6 +23,7 @@ app.use('/auth', authRoutes);
 
 app.use(auth);
 app.use('/teams', teamRoute);
+app.use('/ai', geminiRoute);
 app.use(errorHandler);
 
 app.listen(port, () => {
