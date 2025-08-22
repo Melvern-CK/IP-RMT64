@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: 'http://localhost:3000'
+  baseURL: 'https://phase2challenge1.melvernhacktiv8.online'
 });
 
 // Add a request interceptor to automatically include the Authorization header

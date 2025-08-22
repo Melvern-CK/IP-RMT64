@@ -1,3 +1,8 @@
+// Load environment variables
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const { Move, sequelize } = require('../models');
 
 async function fetchAllMoves() {

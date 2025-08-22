@@ -23,7 +23,7 @@ const AIRecommendation = () => {
         
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch('http://localhost:3000/ai/recommend', {
+            const response = await fetch('https://phase2challenge1.melvernhacktiv8.online/ai/recommend', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const AIRecommendation = () => {
         
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch(`http://localhost:3000/ai/analyze/${teamId}`, {
+            const response = await fetch(`https://phase2challenge1.melvernhacktiv8.online/ai/analyze/${teamId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`

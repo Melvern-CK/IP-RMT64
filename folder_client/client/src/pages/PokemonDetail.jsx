@@ -119,7 +119,7 @@ const PokemonDetail = () => {
   const fetchMoveDetails = async (moveName) => {
     try {
       console.log(`Fetching details for move: ${moveName}`);
-      const response = await fetch(`http://localhost:3000/api/moves/${moveName}`);
+      const response = await fetch(`https://phase2challenge1.melvernhacktiv8.online/api/moves/${moveName}`); // Note used ai for this, katanya disuruh pake fetch biar type,category,power,accuracy bisa kebaca
       if (!response.ok) {
         console.warn(`Move ${moveName} not found in database (status: ${response.status})`);
         return null;
