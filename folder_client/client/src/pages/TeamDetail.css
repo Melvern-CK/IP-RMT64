@@ -1,9 +1,32 @@
+/* Add full-screen background */
+body {
+  background: url('https://cdn.mos.cms.futurecdn.net/iGgYJGnphyBv65utdRGzVh.jpg') center center / cover no-repeat fixed;
+}
+
 .team-detail-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
   min-height: 100vh;
+  position: relative;
+}
+
+/* Add overlay for better content readability */
+.team-detail-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+.team-detail-container > * {
+  position: relative;
+  z-index: 1;
 }
 
 .team-detail-header {
@@ -317,7 +340,7 @@
   border-color: #667eea;
 }
 
-.pokemon-grid {
+.modal-content.pokemon-grid {
   padding: 1rem;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -379,8 +402,8 @@
   .team-slots-container {
     padding: 1rem;
   }
-  
-  .pokemon-grid {
+
+  .modal-content.pokemon-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
   

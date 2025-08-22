@@ -231,31 +231,9 @@ function Teams() {
               </div>
               
               <div className="team-info">
-                <p className="pokemon-count">
-                  {team.TeamPokemons?.length || 0}/6 Pokemon
-                </p>
                 <p className="created-date">
                   Created: {new Date(team.createdAt).toLocaleDateString()}
                 </p>
-              </div>
-
-              <div className="pokemon-slots">
-                {Array.from({ length: 6 }, (_, index) => {
-                  const pokemon = team.TeamPokemons?.[index];
-                  return (
-                    <div key={index} className={`pokemon-slot ${pokemon ? 'filled' : 'empty'}`}>
-                      {pokemon ? (
-                        <img 
-                          src={pokemon.Pokemon?.sprite || '/pokeball.svg'} 
-                          alt={pokemon.Pokemon?.name}
-                          title={pokemon.Pokemon?.name}
-                        />
-                      ) : (
-                        <div className="empty-slot">+</div>
-                      )}
-                    </div>
-                  );
-                })}
               </div>
 
               <button 
