@@ -45,6 +45,11 @@ const Navbar = () => {
           <Link to="/pokemon" className="nav-link">
             Pokémon
           </Link>
+          {isLoggedIn && (
+            <Link to="/teams" className="nav-link">
+              My Teams
+            </Link>
+          )}
           <div className="nav-auth">
             {isLoggedIn ? (
               <>

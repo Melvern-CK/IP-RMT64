@@ -118,7 +118,7 @@ const PokemonDetail = () => {
   // Function to fetch move details from your database API
   const fetchMoveDetails = async (moveName) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/moves/${moveName}`);
+      const response = await fetch(`http://localhost:3000/moves/${moveName}`);
       if (!response.ok) {
         console.log(`Move ${moveName} not found in database`);
         return null;

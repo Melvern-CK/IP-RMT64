@@ -6,6 +6,8 @@ import AllPokemon from './pages/AllPokemon'
 import PokemonDetail from './pages/PokemonDetail'
 import Register from './pages/Register'
 import Login from './pages/Login'
+import Teams from './pages/Teams'
+import TeamDetail from './pages/TeamDetail'
 import './App.css'
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
               <Route path="/pokemon/:id" element={<PokemonDetail />} />
               <Route path="/register" element={<Register />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/teams" element={<Teams />} />
+              <Route path="/teams/:teamId" element={<TeamDetail />} />
             </Routes>
           </main>
         </div>
