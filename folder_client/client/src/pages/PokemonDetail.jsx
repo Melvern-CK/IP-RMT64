@@ -118,12 +118,14 @@ const PokemonDetail = () => {
   // Function to fetch move details from your database API
   const fetchMoveDetails = async (moveName) => {
     try {
-      const response = await fetch(`http://localhost:3000/moves/${moveName}`);
+      console.log(`Fetching details for move: ${moveName}`);
+      const response = await fetch(`http://localhost:3000/api/moves/${moveName}`);
       if (!response.ok) {
-        console.log(`Move ${moveName} not found in database`);
+        console.warn(`Move ${moveName} not found in database (status: ${response.status})`);
         return null;
       }
       const moveData = await response.json();
+      console.log(`Successfully fetched move data for ${moveName}:`, moveData);
       return moveData;
     } catch (error) {
       console.error(`Error fetching move ${moveName}:`, error);
