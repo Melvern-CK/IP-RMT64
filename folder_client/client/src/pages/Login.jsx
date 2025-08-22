@@ -4,6 +4,7 @@ import './Login.css';
 import Swal from 'sweetalert2'
 import http from '../libs/http';
 import { useAuth } from '../contexts/AuthContext';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -91,6 +92,12 @@ const Login = () => {
               )}
             </button>
           </form>
+
+          <div className="divider">
+            <span>OR</span>
+          </div>
+
+          <GoogleLoginButton />
 
           <div className="login-footer">
             <p>

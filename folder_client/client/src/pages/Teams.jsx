@@ -28,14 +28,6 @@ function Teams() {
       setTeams(response.data || []);
     } catch (error) {
       console.error('Error fetching teams:', error);
-      // Only show error if it's not a 404 or empty result
-      if (error.response && error.response.status !== 404) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to fetch teams'
-        });
-      }
       setTeams([]); // Set empty array on error
     } finally {
       setLoading(false);

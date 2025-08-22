@@ -324,3 +324,67 @@
     font-size: 1rem;
   }
 }
+
+/* Google Login Styles */
+.divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+  color: #666;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #ddd;
+}
+
+.divider span {
+  background: white;
+  padding: 0 15px;
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.google-login-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Google Login Styles */
+.divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+  color: #666;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #ddd;
+}
+
+.divider span {
+  background: white;
+  padding: 0 15px;
+  font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.google-login-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
