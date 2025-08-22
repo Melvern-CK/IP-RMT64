@@ -9,7 +9,7 @@ router.use(auth);
 // POST /ai/recommend - Get team recommendations
 router.post('/recommend', GeminiController.getTeamRecommendation);
 
-// POST /ai/analyze/:teamId - Analyze existing team
-router.post('/analyze/:teamId', GeminiController.analyzeTeam);
+// GET /ai/analyze/:teamId - Analyze existing team
+router.get('/analyze/:teamId', GeminiController.analyzeTeam);
 
 module.exports = router;
