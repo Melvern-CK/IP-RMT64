@@ -74,30 +74,65 @@ class TeamController {
   // PATCH /teams/:teamId/pokemon/:pokemonId
     static async editPokemonDetails(req, res, next) {
         try {
+            console.log('Edit Pokemon Request:', {
+                params: req.params,
+                body: req.body,
+                userId: req.user?.id
+            });
+
             const { teamId, pokemonId } = req.params;
             const { moves, ability, nature } = req.body;
             const userId = req.user.id;
-            const team = await Team.findOne({ where: { id: teamId, userId } });
-            if (!team) throw { name: 'NotFound', message: 'Team not found' };
+            
+            // Simple validation
+            if (!teamId || !pokemonId || !userId) {
+                return res.status(400).json({ error: 'Missing required parameters' });
+            }
 
-            const teamPokemon = await TeamPokemon.findOne({ where: { teamId, pokemonId } });
-            if (!teamPokemon) throw { name: 'NotFound', message: 'Pokemon not found in team' };
+            // Find the specific Pokemon in the team
+            const teamPokemon = await TeamPokemon.findOne({ 
+                where: { 
+                    teamId: teamId, 
+                    pokemonId: pokemonId 
+                } 
+            });
 
-      await teamPokemon.update({ moves, ability, nature });
-      // Fetch the Pokémon name only
-      const pokemon = await Pokemon.findByPk(pokemonId, { attributes: ['name'] });
-      const pokemonResult = {
-        name: pokemon.name,
-        ...teamPokemon.toJSON(),
-        Pokemon: undefined // Remove nested object if present
-      };
-      // Fetch the full team with all Pokémon
-      const fullTeam = await Team.findByPk(teamId);
-      res.json({ team: fullTeam, pokemon: pokemonResult });
+            console.log('Found TeamPokemon:', teamPokemon ? 'Yes' : 'No');
+
+            if (!teamPokemon) {
+                return res.status(404).json({ error: 'Pokemon not found in team' });
+            }
+
+            // Convert moves string to array if needed
+            let movesArray = null;
+            if (moves && typeof moves === 'string') {
+                movesArray = moves.split(',').map(move => move.trim()).filter(move => move !== '');
+            } else if (Array.isArray(moves)) {
+                movesArray = moves;
+            }
+
+            // Update the Pokemon details
+            await teamPokemon.update({ 
+                moves: movesArray, 
+                ability: ability || null, 
+                nature: nature || null 
+            });
+            
+            console.log('Update successful');
+            
+            // Return simple success response
+            res.json({ 
+                message: 'Pokemon details updated successfully'
+            });
         } catch (err) {
-            next(err);
+            console.error('Edit Pokemon Error Details:', {
+                message: err.message,
+                name: err.name,
+                stack: err.stack
+            });
+            res.status(500).json({ error: 'Internal server error', details: err.message });
         }
-        }
+    }
         
   // GET /teams
   static async list(req, res, next) {
