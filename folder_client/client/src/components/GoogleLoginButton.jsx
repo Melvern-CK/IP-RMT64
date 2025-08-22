@@ -1,7 +1,7 @@
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import http from '../libs/http';
 
 const GoogleLoginButton = () => {
   const { login } = useAuth();
@@ -10,7 +10,7 @@ const GoogleLoginButton = () => {
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       // Send the Google token to your backend for verification
-      const response = await axios.post('http://localhost:3000/auth/google', {
+      const response = await http.post('/auth/google', {
         token: credentialResponse.credential
       });
 

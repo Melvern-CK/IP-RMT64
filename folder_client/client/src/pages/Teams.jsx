@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import { useAuth } from '../contexts/        await http.put(`/teams/${teamId}`, 
+          { name: newTeamName });Context';
+import http from '../libs/http';
 import Swal from 'sweetalert2';
 import './Teams.css';
 
@@ -21,10 +22,7 @@ function Teams() {
 
   const fetchTeams = async () => {
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await axios.get('http://localhost:3000/teams', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await http.get('/teams');
       setTeams(response.data || []);
     } catch (error) {
       console.error('Error fetching teams:', error);
@@ -54,11 +52,8 @@ function Teams() {
 
     if (teamName) {
       try {
-        const token = localStorage.getItem('access_token');
-        await axios.post('http://localhost:3000/teams', 
-          { name: teamName },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await http.post('/teams', 
+          { name: teamName });
         
         Swal.fire({
           icon: 'success',
@@ -93,10 +88,7 @@ function Teams() {
 
     if (result.isConfirmed) {
       try {
-        const token = localStorage.getItem('access_token');
-        await axios.delete(`http://localhost:3000/teams/${teamId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await http.delete(`/teams/${teamId}`);
         
         Swal.fire({
           icon: 'success',
@@ -136,7 +128,7 @@ function Teams() {
     if (newName && newName !== currentName) {
       try {
         const token = localStorage.getItem('access_token');
-        await axios.put(`http://localhost:3000/teams/${teamId}`, 
+        await http.put(`/teams/${teamId}`, 
           { name: newName },
           { headers: { Authorization: `Bearer ${token}` } }
         );

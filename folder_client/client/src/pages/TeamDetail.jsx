@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import http from '../libs/http';
 import Swal from 'sweetalert2';
 import './TeamDetail.css';
 
@@ -27,10 +27,7 @@ function TeamDetail() {
 
   const fetchTeamDetail = async () => {
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await axios.get(`http://localhost:3000/teams/${teamId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await http.get(`/teams/${teamId}`);
       console.log(response);
       
       setTeam(response.data);
@@ -50,7 +47,7 @@ function TeamDetail() {
 
   const fetchAllPokemon = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/pokemon');
+      const response = await http.get('/pokemon');
       setAllPokemon(response.data);
     } catch (error) {
       console.error('Error fetching Pokemon:', error);
@@ -59,12 +56,9 @@ function TeamDetail() {
 
   const addPokemonToTeam = async (pokemonId, slot) => {
     try {
-      const token = localStorage.getItem('access_token');
-      await axios.post(`http://localhost:3000/teams/${teamId}/pokemon`, {
+      await http.post(`/teams/${teamId}/pokemon`, {
         pokemonId,
         slot
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
       Swal.fire({
@@ -101,10 +95,7 @@ function TeamDetail() {
 
     if (result.isConfirmed) {
       try {
-        const token = localStorage.getItem('access_token');
-        await axios.delete(`http://localhost:3000/teams/${teamId}/pokemon/${pokemonId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await http.delete(`/teams/${teamId}/pokemon/${pokemonId}`);
 
         Swal.fire({
           icon: 'success',
@@ -405,13 +396,10 @@ function TeamDetail() {
 
     if (formValues) {
       try {
-        const token = localStorage.getItem('access_token');
-        await axios.patch(`http://localhost:3000/teams/${teamId}/pokemon/${teamPokemon.Pokemon.id}`, {
+        await http.patch(`/teams/${teamId}/pokemon/${teamPokemon.Pokemon.id}`, {
           ability: formValues.ability,
           nature: formValues.nature,
           moves: formValues.moves
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
         });
 
         Swal.fire({
