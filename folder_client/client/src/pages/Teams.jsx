@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/        await http.put(`/teams/${teamId}`, 
-          { name: newTeamName });Context';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import http from '../libs/http';
 import Swal from 'sweetalert2';
 import './Teams.css';
@@ -172,10 +171,15 @@ function Teams() {
     <div className="teams-container">
       <div className="teams-header">
         <h1>My Pokemon Teams</h1>
-        <button className="create-team-btn" onClick={createNewTeam}>
-          <span className="pokeball-icon">⚪</span>
-          Create New Team
-        </button>
+        <div className="header-buttons">
+          <Link to="/ai" className="ai-assistant-btn">
+            🧠 AI Assistant
+          </Link>
+          <button className="create-team-btn" onClick={createNewTeam}>
+            <span className="pokeball-icon">⚪</span>
+            Create New Team
+          </button>
+        </div>
       </div>
 
       {teams.length === 0 ? (

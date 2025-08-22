@@ -8,6 +8,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import Teams from './pages/Teams'
 import TeamDetail from './pages/TeamDetail'
+import AIRecommendation from './pages/AIRecommendation'
 import './App.css'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/teams" element={<Teams />} />
               <Route path="/teams/:teamId" element={<TeamDetail />} />
+              <Route path="/ai" element={<AIRecommendation />} />
             </Routes>
           </main>
         </div>

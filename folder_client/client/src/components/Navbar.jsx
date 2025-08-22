@@ -46,9 +46,14 @@ const Navbar = () => {
             Pokémon
           </Link>
           {isLoggedIn && (
-            <Link to="/teams" className="nav-link">
-              My Teams
-            </Link>
+            <>
+              <Link to="/teams" className="nav-link">
+                My Teams
+              </Link>
+              <Link to="/ai" className="nav-link">
+                AI Assistant
+              </Link>
+            </>
           )}
           <div className="nav-auth">
             {isLoggedIn ? (
